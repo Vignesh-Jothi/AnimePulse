@@ -25,8 +25,8 @@
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="anime__details__pic set-bg" data-setbg="{{ asset('assets/img/'.$anime->image.'') }}">
-                            <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                            <div class="comment"><i class="fa fa-comments"></i> {{$numberComments}}</div>
+                            <div class="view"><i class="fa fa-eye"></i>{{$numberViwes}}</div>
                         </div>
                     </div>
                     <div class="col-lg-9">
@@ -52,7 +52,7 @@
 
                                             <li><span>Duration:</span>{{$anime->duration}}</li>
                                             <li><span>Quality:</span>{{$anime->quality}}</li>
-                                            <li><span>Views:</span> 131,541</li>
+                                            <li><span>Views:</span>{{$numberViwes}}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -66,76 +66,37 @@
                         </div>
                     </div>
                 </div>
+                @if(session()->has('message'))
+                    <div class="alert alert-success">
+                        {{ session()->get('message') }}
+                    </div>
+                @endif
                 <div class="row">
                     <div class="col-lg-8 col-md-8">
                         <div class="anime__details__review">
                             <div class="section-title">
                                 <h5>Reviews</h5>
                             </div>
-                            <div class="anime__review__item">
-                                <div class="anime__review__item__pic">
-                                    <img src="img/anime/review-1.jpg" alt="">
+                            @foreach($comments as $cmt)
+                                <div class="anime__review__item">
+                                    <div class="anime__review__item__pic">
+                                        <img src="{{asset('assets/img/'.$cmt->image.'')}}" alt="">
+                                    </div>
+                                    <div class="anime__review__item__text">
+                                        <h6>{{$cmt->user_name}}<span> - {{$cmt->updated_at}}</span></h6>
+                                        <p>{{$cmt->comment}}</p>
+                                    </div>
                                 </div>
-                                <div class="anime__review__item__text">
-                                    <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                                    <p>whachikan Just noticed that someone categorized this as belonging to the genre
-                                    "demons" LOL</p>
-                                </div>
-                            </div>
-                            <div class="anime__review__item">
-                                <div class="anime__review__item__pic">
-                                    <img src="img/anime/review-2.jpg" alt="">
-                                </div>
-                                <div class="anime__review__item__text">
-                                    <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                                    <p>Finally it came out ages ago</p>
-                                </div>
-                            </div>
-                            <div class="anime__review__item">
-                                <div class="anime__review__item__pic">
-                                    <img src="img/anime/review-3.jpg" alt="">
-                                </div>
-                                <div class="anime__review__item__text">
-                                    <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                                    <p>Where is the episode 15 ? Slow update! Tch</p>
-                                </div>
-                            </div>
-                            <div class="anime__review__item">
-                                <div class="anime__review__item__pic">
-                                    <img src="img/anime/review-4.jpg" alt="">
-                                </div>
-                                <div class="anime__review__item__text">
-                                    <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                                    <p>whachikan Just noticed that someone categorized this as belonging to the genre
-                                    "demons" LOL</p>
-                                </div>
-                            </div>
-                            <div class="anime__review__item">
-                                <div class="anime__review__item__pic">
-                                    <img src="img/anime/review-5.jpg" alt="">
-                                </div>
-                                <div class="anime__review__item__text">
-                                    <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                                    <p>Finally it came out ages ago</p>
-                                </div>
-                            </div>
-                            <div class="anime__review__item">
-                                <div class="anime__review__item__pic">
-                                    <img src="img/anime/review-6.jpg" alt="">
-                                </div>
-                                <div class="anime__review__item__text">
-                                    <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                                    <p>Where is the episode 15 ? Slow update! Tch</p>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                         <div class="anime__details__form">
                             <div class="section-title">
                                 <h5>Your Comment</h5>
                             </div>
-                            <form action="#">
-                                <textarea placeholder="Your Comment"></textarea>
-                                <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
+                            <form method="POST" action="{{route('insertComment', $anime->id)}}" >
+                                @csrf
+                                    <textarea name="comment" placeholder="Your Comment"></textarea>
+                                    <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
                             </form>
                         </div>
                     </div>
